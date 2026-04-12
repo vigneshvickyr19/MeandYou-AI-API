@@ -20,10 +20,10 @@ export class AiProvider {
       Personality: ${personality}
       
       Requirements:
-      - Max 2 lines
+      - Max 3 lines
       - Natural, human tone
-      - No emoji overload
-      - Do not include any labels like "Bio:"
+      - Include 2-3 relevant emojis for better engagement
+      - Do not include any labels like "Bio:" or "Personality:"
     `.trim();
 
     try {
@@ -86,6 +86,10 @@ export class AiProvider {
       1. Funny
       2. Casual
       3. Flirty
+      
+      Requirements:
+      - Include 1 relevant emoji per suggestion
+      - Keep it short and natural
       
       Format: Return ONLY the 3 replies, each on a new line.
     `.trim();
