@@ -4,13 +4,14 @@ dotenv.config();
 export const config = {
   port: process.env.PORT || 3000,
   env: process.env.NODE_ENV || 'development',
-  deepseek: {
-    apiKey: process.env.DEEPSEEK_API_KEY || '',
-    baseUrl: 'https://api.deepseek.com/v1',
-    model: 'deepseek-chat',
+  gemini: {
+    apiKey: process.env.GEMINI_API_KEY || '',
+    model: process.env.GEMINI_MODEL || 'gemini-1.5-flash-latest',
+    enabled: true, // Always enabled as per request
+    timeout: parseInt(process.env.AI_TIMEOUT || '15000'), // Default to 15s
   },
 };
 
-if (!config.deepseek.apiKey) {
-  console.warn('WARNING: DEEPSEEK_API_KEY is not set in environment variables.');
+if (!config.gemini.apiKey) {
+  console.warn('WARNING: GEMINI_API_KEY is not set in environment variables.');
 }

@@ -9,7 +9,7 @@ export class AiService {
     const response = await this.aiRepository.getCompletion(system, user);
     
     return {
-      bio: response.choices[0].message.content.trim(),
+      bio: response.choices[0]?.message.content.trim() || '',
       model: response.model
     };
   }
@@ -19,7 +19,7 @@ export class AiService {
     const response = await this.aiRepository.getCompletion(system, user);
     
     // Split by newlines or numbered lists and clean up
-    const content = response.choices[0].message.content;
+    const content = response.choices[0]?.message.content || '';
     const messages = content
       .split('\n')
       .map(m => m.replace(/^\d+[\.\)]\s*/, '').trim())
@@ -37,7 +37,7 @@ export class AiService {
     const { system, user } = aiPrompts.suggestReplies(chat);
     const response = await this.aiRepository.getCompletion(system, user);
 
-    const content = response.choices[0].message.content;
+    const content = response.choices[0]?.message.content || '';
     const replies = content
       .split('\n')
       .map(r => r.replace(/^\d+[\.\)]\s*/, '').trim())
