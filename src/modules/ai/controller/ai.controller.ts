@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { AiService } from '../service/ai.service';
 import { sendSuccess, sendError } from '../../../core/utils/response.helper';
-import { GenerateBioRequest, FirstMessageRequest, SuggestRepliesRequest } from '../types/ai.types';
+import { GenerateBioRequest, FirstMessageRequest, SuggestRepliesRequest, AnalyzeProfileRequest } from '../types/ai.types';
 
 export class AiController {
   constructor(private readonly aiService: AiService) {}
@@ -51,6 +51,21 @@ export class AiController {
 
       const result = await this.aiService.suggestReplies(lastMessages);
       return sendSuccess(res, { replies: result.replies });
+    } catch (error: any) {
+      return sendError(res, error.message);
+    }
+  };
+
+  analyzeProfile = async (req: Request, res: Response) => {
+    try {
+      const profileData: AnalyzeProfileRequest = req.body;
+
+      if (!profileData.basicInfo || !profileData.photos) {
+        return sendError(res, 'Photos and Basic Info are required for analysis', 400);
+      }
+
+      const result = await this.aiService.analyzeProfile(profileData);
+      return sendSuccess(res, result);
     } catch (error: any) {
       return sendError(res, error.message);
     }

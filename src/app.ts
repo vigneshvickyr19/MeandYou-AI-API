@@ -3,7 +3,7 @@ import cors from 'cors';
 import { config } from './core/config/env.config';
 import { logger } from './core/utils/logger';
 import { sendError } from './core/utils/response.helper';
-import aiRoutes from './features/ai/ai.routes';
+import aiRoutes from './modules/ai/routes/ai.routes';
 
 const app = express();
 

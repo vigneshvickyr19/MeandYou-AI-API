@@ -1,5 +1,7 @@
 import { AiRepository } from '../repository/ai.repository';
 import { aiPrompts } from '../prompts/ai.prompts';
+import { AnalyzeProfileRequest, AnalyzeProfileResponse } from '../types/ai.types';
+import { logger } from '../../../core/utils/logger';
 
 export class AiService {
   constructor(private readonly aiRepository: AiRepository) {}
@@ -46,5 +48,32 @@ export class AiService {
     return {
       replies
     };
+  }
+
+  async analyzeProfile(profileData: AnalyzeProfileRequest): Promise<AnalyzeProfileResponse> {
+    const { system, user } = aiPrompts.analyzeProfile(JSON.stringify(profileData, null, 2));
+    const response = await this.aiRepository.getCompletion(system, user);
+    
+    const content = response.choices[0]?.message.content || '';
+    
+    try {
+      // 1. Try direct parse
+      return JSON.parse(content) as AnalyzeProfileResponse;
+    } catch (parseError) {
+      try {
+        // 2. Fallback: Try to extract JSON from markdown or text garbage
+        const jsonMatch = content.match(/\{[\s\S]*\}/);
+        if (jsonMatch) {
+          return JSON.parse(jsonMatch[0]) as AnalyzeProfileResponse;
+        }
+        throw new Error('No JSON block found');
+      } catch (fallbackError) {
+        logger.error('AI Profile Analysis Parse Error', {
+          content,
+          error: content.length > 0 ? 'Invalid JSON format' : 'Empty response'
+        });
+        throw new Error('Failed to parse AI optimization response');
+      }
+    }
   }
 }

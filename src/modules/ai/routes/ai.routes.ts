@@ -14,5 +14,6 @@ const aiController = new AiController(aiService);
 router.post('/generate-bio', aiController.generateBio);
 router.post('/first-message', aiController.firstMessage);
 router.post('/suggest-replies', aiController.suggestReplies);
+router.post('/analyze-profile', aiController.analyzeProfile);
 
 export default router;
