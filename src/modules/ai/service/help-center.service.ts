@@ -27,8 +27,9 @@ export class HelpCenterService {
     // 4. Let Gemini find the best match and detect safety actions
     const aiResult = await this.matchFaqWithAi(message, faqsJson, categoryName);
 
-    // 4. LOCAL SUGGESTIONS: Strictly return the top 3 FAQs from this category by priority
+    // 4. LOCAL SUGGESTIONS: Return the top 3 OTHER FAQs from this category
     const localSuggestions = filteredFaqs
+      .filter(f => f.question !== aiResult.question)
       .slice(0, 3)
       .map(f => f.question);
     
