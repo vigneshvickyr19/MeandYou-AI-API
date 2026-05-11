@@ -37,4 +37,5 @@ export interface HelpCenterResponse {
   answer: string;
   actions: string[];
   categoryId: string;
+  suggestedQuestions: string[];
 }

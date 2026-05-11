@@ -20,7 +20,7 @@ export class HelpCenterController {
       }
 
       const trimmedMessage = message.trim();
-      if (trimmedMessage.length < 3) {
+      if (trimmedMessage.length < 2) {
         return sendError(res, 'Message is too short', 400);
       }
 
