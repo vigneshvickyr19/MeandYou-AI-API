@@ -38,6 +38,62 @@ RESPONSE FORMAT:
   "overallTips": ["string"]
 }`,
     user: `USER PROFILE DATA:\n${profileData}`
+  }),
+
+  analyzeHelpIntent: (message: string) => ({
+    system: `You are an AI Help Center Assistant. Your task is to analyze user queries and extract intent, keywords, and safety signals.
+
+Supported intents:
+- account_issue
+- payment_issue
+- chat_issue
+- technical_issue
+- privacy_issue
+- safety_abuse
+- report_user
+- block_user
+- general
+
+Safety Actions:
+If intent involves abuse, harassment, scam, or fake profiles, set suggestedActions to ["report", "block"].
+Otherwise, set suggestedActions to [].
+
+Return response in STRICT JSON format:
+{
+  "intent": "string",
+  "keywords": ["string"],
+  "isSafetyRelated": boolean,
+  "suggestedActions": ["string"]
+}`,
+    user: `User Message: ${message}`
+  }),
+
+  matchFaq: (message: string, faqsJson: string) => ({
+    system: `You are an AI Help Center Matching Assistant.
+Your goal is to find the best matching FAQ from a provided list based on the user's message.
+
+RESOURCES:
+- Filtered FAQs List: ${faqsJson}
+
+INSTRUCTIONS:
+1. Analyze the user's message intent and keywords.
+2. Compare it against the provided list of FAQs.
+3. If a strong match is found, return the FAQ details.
+4. If no good match is found, return a polite default response.
+5. Identify if the situation requires safety actions (report/block).
+
+SAFETY RULES:
+If the message indicates harassment, abuse, fake profile, threats, or scams, return actions: ["report", "block"].
+
+Return response in STRICT JSON format:
+{
+  "intent": "string",
+  "question": "string",
+  "answer": "string",
+  "actions": ["string"],
+  "matchFound": boolean
+}`,
+    user: `User Message: ${message}`
   })
 };
 
