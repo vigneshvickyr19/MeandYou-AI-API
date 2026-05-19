@@ -4,6 +4,7 @@ import { config } from './core/config/env.config';
 import { logger } from './core/utils/logger';
 import { sendError } from './core/utils/response.helper';
 import aiRoutes from './modules/ai/routes/ai.routes';
+import profileVerificationRoutes from './modules/profileVerification/routes/profileVerification.routes';
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use((req, res, next) => {
 
 // Routes
 app.use('/api/ai', aiRoutes);
+app.use('/api/profile-verification', profileVerificationRoutes);
 
 // Health Check
 app.get('/health', (req, res) => {
