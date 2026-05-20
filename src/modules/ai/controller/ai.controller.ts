@@ -15,7 +15,7 @@ export class AiController {
       }
 
       const result = await this.aiService.generateBio(interests, personality);
-      return sendSuccess(res, { bio: result.bio }, { model: result.model });
+      return sendSuccess(res, { bios: result.bios }, { model: result.model });
     } catch (error: any) {
       return sendError(res, error.message);
     }

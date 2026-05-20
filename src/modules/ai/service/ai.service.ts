@@ -10,8 +10,34 @@ export class AiService {
     const { system, user } = aiPrompts.generateBio(interests, personality);
     const response = await this.aiRepository.getCompletion(system, user);
     
+    const content = response.choices[0]?.message.content.trim() || '';
+    
+    logger.info(`Raw Gemini Bio Response: ${content}`);
+    
+    let bios: string[] = [];
+    try {
+      // Clean potential markdown blocks
+      const cleanJson = content.replace(/```json|```/gi, '').trim();
+      const parsed = JSON.parse(cleanJson);
+      
+      if (Array.isArray(parsed)) {
+        bios = parsed.map(item => item.bio || item);
+      } else if (parsed.bios && Array.isArray(parsed.bios)) {
+        bios = parsed.bios.map((item: any) => item.bio || item);
+      } else {
+        // Just extract all string values from the object as a fallback
+        bios = Object.values(parsed).filter(val => typeof val === 'string') as string[];
+      }
+    } catch (e) {
+      // Fallback: If it's just raw text, split by newlines
+      bios = content
+        .split('\n')
+        .map(b => b.replace(/^\d+[\.\)\-]\s*/, '').trim())
+        .filter(b => b.length > 5); // Filter out brackets and short gibberish
+    }
+    
     return {
-      bio: response.choices[0]?.message.content.trim() || '',
+      bios,
       model: response.model
     };
   }
