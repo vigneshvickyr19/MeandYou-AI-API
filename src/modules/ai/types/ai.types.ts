@@ -23,7 +23,8 @@ export interface AnalyzeProfileRequest {
   };
   interests: string[];
   preferences: {
-    lookingFor: string;
+    lookingForGenders: string[];
+    relationshipGoals: string[];
     ageRange: { min: number; max: number };
     maxDistance: number;
   };
